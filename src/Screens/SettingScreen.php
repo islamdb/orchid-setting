@@ -37,11 +37,12 @@ class SettingScreen extends Screen
      *
      * @var
      */
-    protected $addPermission;
-    protected $editPermission;
-    protected $propertiesPermission;
-    protected $orderPermission;
-    protected $deletePermission;
+    protected $user;
+    protected $addPermission = false;
+    protected $editPermission = false;
+    protected $propertiesPermission = false;
+    protected $orderPermission = false;
+    protected $deletePermission = false;
 
     /**
      * @var string[]
@@ -55,12 +56,17 @@ class SettingScreen extends Screen
         $this->name = config('orchidsetting.name');
         $this->description = config('orchidsetting.description');
 
-        $user = auth()->user();
-        $this->addPermission = $user->hasAccess('setting.add');
-        $this->editPermission = $user->hasAccess('setting.edit');
-        $this->propertiesPermission = $user->hasAccess('setting.properties');
-        $this->orderPermission = $user->hasAccess('setting.order');
-        $this->deletePermission = $user->hasAccess('setting.delete');
+        $this->middleware(function () {
+            $user = auth()->user();
+
+            $this->addPermission = $user->hasAccess('setting.add');
+            $this->editPermission = $user->hasAccess('setting.edit');
+            $this->propertiesPermission = $user->hasAccess('setting.properties');
+            $this->orderPermission = $user->hasAccess('setting.order');
+            $this->deletePermission = $user->hasAccess('setting.delete');
+
+            $this->user = $user;
+        });
     }
 
     /**
