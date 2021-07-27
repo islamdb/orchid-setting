@@ -50,7 +50,7 @@ class OrchidSettingServiceProvider extends ServiceProvider
             Dashboard::MENU_MAIN,
             Menu::make(config('orchidsetting.name'))
                 ->icon('settings')
-                ->route('setting')
+//                ->route('setting')
                 ->permission('setting.browse')
                 ->sort(config('orchidsetting.menu_sort'))
                 ->title(config('orchidsetting.menu_title'))
