@@ -56,7 +56,7 @@ class SettingScreen extends Screen
         $this->name = config('orchidsetting.name');
         $this->description = config('orchidsetting.description');
 
-        $this->middleware(function () {
+        $this->middleware(function ($request, $next) {
             $user = auth()->user();
 
             $this->addPermission = $user->hasAccess('setting.add');
@@ -66,6 +66,8 @@ class SettingScreen extends Screen
             $this->deletePermission = $user->hasAccess('setting.delete');
 
             $this->user = $user;
+
+            return $next($request);
         });
     }
 
