@@ -30,6 +30,12 @@ class OrchidSettingServiceProvider extends ServiceProvider
      */
     public function boot(Dashboard $dashboard)
     {
+        Route::domain((string)config('platform.domain'))
+            ->prefix(Dashboard::prefix('/'))
+            ->as('platform.')
+            ->middleware(config('platform.middleware.private'))
+            ->group(__DIR__ . '/../routes/orchidsetting.php');
+
         $dashboard->registerPermissions(
             ItemPermission::group(__('Setting'))
                 ->addPermission('setting.browse', __('Browse'))
@@ -54,11 +60,5 @@ class OrchidSettingServiceProvider extends ServiceProvider
             __DIR__.'/../config/orchidsetting.php' => config_path('orchidsetting.php'),
             __DIR__.'/../database/migrations/2021_06_30_111633_create_settings_table.php' => database_path('migrations/2021_06_30_111633_create_settings_table.php')
         ]);
-
-        Route::domain((string)config('platform.domain'))
-            ->prefix(Dashboard::prefix('/'))
-            ->as('platform.')
-            ->middleware(config('platform.middleware.private'))
-            ->group(__DIR__ . '/../routes/orchidsetting.php');
     }
 }
