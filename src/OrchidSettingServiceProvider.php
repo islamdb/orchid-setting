@@ -18,7 +18,7 @@ class OrchidSettingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'../config/orchidsetting.php',
+            __DIR__.'/../config/orchidsetting.php',
             'orchidsetting'
         );
     }
