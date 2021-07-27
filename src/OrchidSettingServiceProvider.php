@@ -19,7 +19,7 @@ class OrchidSettingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/orchidsetting.php',
+            __DIR__ . '/../config/orchidsetting.php',
             'orchidsetting'
         );
     }
@@ -47,21 +47,21 @@ class OrchidSettingServiceProvider extends ServiceProvider
                 ->addPermission('setting.delete', __('Delete'))
         );
 
-            View::composer('platform::dashboard', function () use ($dashboard) {
-                $dashboard->registerMenuElement(
-                    Dashboard::MENU_MAIN,
-                    Menu::make(config('orchidsetting.name'))
-                        ->icon('settings')
-//                ->route('setting')
-                        ->permission('setting.browse')
-                        ->sort(config('orchidsetting.menu_sort'))
-                        ->title(config('orchidsetting.menu_title'))
-                );
-            });
+        View::composer('platform::dashboard', function () use ($dashboard) {
+            $dashboard->registerMenuElement(
+                Dashboard::MENU_MAIN,
+                Menu::make(config('orchidsetting.name'))
+                    ->icon('settings')
+                    // ->route('setting')
+                    ->permission('setting.browse')
+                    ->sort(config('orchidsetting.menu_sort'))
+                    ->title(config('orchidsetting.menu_title'))
+            );
+        });
 
         $this->publishes([
-            __DIR__.'/../config/orchidsetting.php' => config_path('orchidsetting.php'),
-            __DIR__.'/../database/migrations/2021_06_30_111633_create_settings_table.php' => database_path('migrations/2021_06_30_111633_create_settings_table.php')
+            __DIR__ . '/../config/orchidsetting.php' => config_path('orchidsetting.php'),
+            __DIR__ . '/../database/migrations/2021_06_30_111633_create_settings_table.php' => database_path('migrations/2021_06_30_111633_create_settings_table.php')
         ]);
     }
 }
