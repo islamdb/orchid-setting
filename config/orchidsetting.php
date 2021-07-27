@@ -16,7 +16,13 @@ return [
      */
     'description' => 'Setting list of this application',
 
-    'menu_sort' => 5000,
+    /**
+     * Set menu sorting
+     */
+    'menu_sort' => 9999,
 
+    /**
+     * Set menu title
+     */
     'menu_title' => null
 ];
