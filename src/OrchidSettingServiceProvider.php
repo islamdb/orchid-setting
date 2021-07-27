@@ -3,6 +3,7 @@
 namespace IslamDB\OrchidSetting;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
@@ -46,15 +47,17 @@ class OrchidSettingServiceProvider extends ServiceProvider
                 ->addPermission('setting.delete', __('Delete'))
         );
 
-        \Orchid\Support\Facades\Dashboard::registerMenuElement(
-            Dashboard::MENU_MAIN,
-            Menu::make(config('orchidsetting.name'))
-                ->icon('settings')
+            View::composer('platform::dashboard', function () use ($dashboard) {
+                $dashboard->registerMenuElement(
+                    Dashboard::MENU_MAIN,
+                    Menu::make(config('orchidsetting.name'))
+                        ->icon('settings')
 //                ->route('setting')
-                ->permission('setting.browse')
-                ->sort(config('orchidsetting.menu_sort'))
-                ->title(config('orchidsetting.menu_title'))
-        );
+                        ->permission('setting.browse')
+                        ->sort(config('orchidsetting.menu_sort'))
+                        ->title(config('orchidsetting.menu_title'))
+                );
+            });
 
         $this->publishes([
             __DIR__.'/../config/orchidsetting.php' => config_path('orchidsetting.php'),
