@@ -120,7 +120,7 @@ class SettingListScreen extends Screen
 
                 return $setting;
             });
-
+        
         $layouts = [
             Layout::tabs(
                 $settings->groupBy('group')

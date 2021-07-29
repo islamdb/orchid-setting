@@ -4,6 +4,8 @@ namespace IslamDB\OrchidSetting\Screens;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 use IslamDB\OrchidHelper\Field;
 use IslamDB\OrchidSetting\Layouts\SettingFormListenerLayout;
 use IslamDB\OrchidSetting\Models\Setting;
@@ -39,7 +41,19 @@ class SettingEditScreen extends Screen
      */
     public $description = '';
 
+    /**
+     * Flag
+     *
+     * @var bool
+     */
     protected $edit = true;
+
+    /**
+     * Setting model
+     *
+     * @var
+     */
+    protected $setting;
 
     public function __construct()
     {
@@ -78,6 +92,8 @@ class SettingEditScreen extends Screen
             $this->name = __('Edit').' '.$setting->name;
             $setting->options = json_decode($setting->options, true);
         }
+
+        $this->setting = $setting;
 
         return [
             'setting' => $setting
@@ -135,7 +151,10 @@ class SettingEditScreen extends Screen
                         'full' => Input::make()->style('font-family: "Courier New", monospace;')
                     ]),
                 Input::make('setting.type')
+                    ->type('hidden'),
+                Input::make('old_key')
                     ->type('hidden')
+                    ->value($this->setting->key)
             ])
         ];
     }
@@ -146,10 +165,10 @@ class SettingEditScreen extends Screen
     public function update()
     {
         $this->validate(request(), [
-            'key' => 'required',
-            'name' => 'required',
-            'group' => 'required',
-            'type' => 'required',
+            'setting.key' =>  'required:unique:settings,key',
+            'setting.name' => 'required',
+            'setting.group' => 'required',
+            'setting.type' => 'required',
             'old_key' => 'required'
         ]);
 
@@ -157,7 +176,7 @@ class SettingEditScreen extends Screen
             ->find(request()->old_key);
 
         if (!empty($setting)) {
-            $data = request()->all();
+            $data = request()->get('setting');
             $data['options'] = json_encode($data['options']);
 
             $setting->fill($data);
@@ -167,6 +186,8 @@ class SettingEditScreen extends Screen
         } else {
             Alert::warning(__('Setting was not found'));
         }
+
+        return redirect()->route('setting.edit', ['setting' => $setting->key]);
     }
 
     /**

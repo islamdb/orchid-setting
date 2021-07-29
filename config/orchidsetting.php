@@ -4,7 +4,7 @@ return [
     /**
      * Set name for setting screen
      */
-    'name' => __('Setting'),
+    'name' => 'Setting',
 
     /**
      * Set description for setting screen

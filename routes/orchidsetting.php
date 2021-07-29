@@ -18,7 +18,7 @@ Route::screen('/setting/create', SettingEditScreen::class)
     ->breadcrumbs(function (Trail $trail) {
         return $trail
             ->parent('setting')
-            ->push(__('Create'));
+            ->push('Create');
     });
 
 Route::screen('/setting/{setting}/edit', SettingEditScreen::class)
@@ -26,5 +26,5 @@ Route::screen('/setting/{setting}/edit', SettingEditScreen::class)
     ->breadcrumbs(function (Trail $trail) {
         return $trail
             ->parent('setting')
-            ->push(__('Edit'));
+            ->push('Edit');
     });
