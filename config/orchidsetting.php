@@ -2,14 +2,9 @@
 
 return [
     /**
-     * Set uri for route
-     */
-    'uri' => 'setting',
-
-    /**
      * Set name for setting screen
      */
-    'name' => 'Setting',
+    'name' => __('Setting'),
 
     /**
      * Set description for setting screen

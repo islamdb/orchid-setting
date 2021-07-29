@@ -33,7 +33,6 @@ class OrchidSettingServiceProvider extends ServiceProvider
     {
         Route::domain((string)config('platform.domain'))
             ->prefix(Dashboard::prefix('/'))
-            ->as('platform.')
             ->middleware(config('platform.middleware.private'))
             ->group(__DIR__ . '/../routes/orchidsetting.php');
 
@@ -52,7 +51,7 @@ class OrchidSettingServiceProvider extends ServiceProvider
                 Dashboard::MENU_MAIN,
                 Menu::make(config('orchidsetting.name'))
                     ->icon('settings')
-                    ->route('platform.setting')
+                    ->route('setting')
                     ->permission('setting.browse')
                     ->sort(config('orchidsetting.menu_sort'))
                     ->title(config('orchidsetting.menu_title'))

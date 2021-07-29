@@ -63,7 +63,7 @@ class Setting extends Model
     protected static function booted()
     {
         static::deleting(function (Setting $setting) {
-            $setting->attachment()
+            $attachments = $setting->attachment()
                 ->get()
                 ->each(function (Attachment $attachment) {
                     $attachment->delete();
@@ -88,7 +88,8 @@ class Setting extends Model
                 ->whereIn('id', $attachmentIds);
         }
 
-        return collect([]);
+        return Attachment::query()
+            ->whereIn('id', []);
     }
 
     /**
