@@ -31,6 +31,8 @@ class OrchidSettingServiceProvider extends ServiceProvider
      */
     public function boot(Dashboard $dashboard)
     {
+        require_once(__DIR__ . '/helpers.php');
+
         Route::domain((string)config('platform.domain'))
             ->prefix(Dashboard::prefix('/'))
             ->middleware(config('platform.middleware.private'))
