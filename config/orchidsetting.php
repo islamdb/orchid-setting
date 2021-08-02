@@ -1,23 +1,51 @@
 <?php
 
 return [
-    /**
-     * Set name for setting screen
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Menu & Bar Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your setting menu. This value is used when the
+    | orchid needs to place the menu's name
+    |
+    */
+
     'name' => 'Setting',
 
-    /**
-     * Set description for setting screen
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Bar Description
+    |--------------------------------------------------------------------------
+    |
+    | This value is the description of your setting bar. This value is used
+    | when the orchid needs to place the menu's description
+    |
+    */
+
     'description' => 'Setting list of this application',
 
-    /**
-     * Set menu sorting
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Sorting Menu
+    |--------------------------------------------------------------------------
+    |
+    | This value is the sorting of your setting menu. This value is used when
+    | the orchid needs to sort the menu
+    |
+    */
+
     'menu_sort' => 9999,
 
-    /**
-     * Set menu title
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Menu Title
+    |--------------------------------------------------------------------------
+    |
+    | This value is the title of your setting's name menu.
+    |
+    */
+
     'menu_title' => null
 ];
