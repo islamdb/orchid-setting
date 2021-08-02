@@ -83,7 +83,13 @@ class SettingEditScreen extends Screen
             }
 
             $setting->options = $type->methods;
-            $setting->options = json_decode(json_encode($setting->options), true);
+            $setting->options = collect(json_decode(json_encode($setting->options), true))
+                ->map(function ($option) {
+                    $option['param'] = $option['param_str'];
+                    unset($option['param_str']);
+
+                    return $option;
+                });
             $setting->type = $type->class;
 
             $this->name = __('Create').' '.$type->name;
