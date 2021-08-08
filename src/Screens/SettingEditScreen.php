@@ -2,6 +2,7 @@
 
 namespace IslamDB\OrchidSetting\Screens;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -168,7 +169,7 @@ class SettingEditScreen extends Screen
     /**
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function update()
+    public function update(Request $request)
     {
         $this->validate(request(), [
             'setting.key' =>  'required:unique:settings,key',
@@ -184,6 +185,7 @@ class SettingEditScreen extends Screen
         if (!empty($setting)) {
             $data = request()->get('setting');
             $data['options'] = json_encode($data['options']);
+            $data['key'] = str_replace('.', '_', $data['key']);
 
             $setting->fill($data);
             $setting->save();
