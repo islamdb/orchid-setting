@@ -65,7 +65,7 @@ if (!function_exists('method_from_doc_code')) {
 }
 
 if (!function_exists('setting')) {
-    function setting($key, $default = null)
+    function setting($key, $default = null, $getUrlIfAttachments = true)
     {
         $setting = Setting::query()
             ->find($key);
@@ -75,7 +75,17 @@ if (!function_exists('setting')) {
         }
 
         if (Field::isFileField($setting->type)) {
-            return $setting->attachment()->get();
+            $attachments = $setting->attachment()->get();
+
+            if (count($attachments) == 1) {
+                return $getUrlIfAttachments
+                    ? $attachments->first()->url()
+                    : $attachments->first();
+            }
+
+            return $getUrlIfAttachments
+                ? $attachments->map->url()
+                : $attachments;
         } elseif ($setting->is_array_value) {
             return rescue(function () use ($setting) {
                 return json_decode($setting->value, true);
