@@ -46,6 +46,8 @@ class OrchidSettingServiceProvider extends ServiceProvider
                 ->addPermission('setting.add', __('Add'))
                 ->addPermission('setting.order', __('Order'))
                 ->addPermission('setting.delete', __('Delete'))
+                ->addPermission('setting.backup', __('Backup'))
+                ->addPermission('setting.restore', __('Restore'))
         );
 
         View::composer('platform::dashboard', function () use ($dashboard) {

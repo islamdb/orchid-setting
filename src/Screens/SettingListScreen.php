@@ -2,6 +2,7 @@
 
 namespace IslamDB\OrchidSetting\Screens;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use IslamDB\OrchidHelper\Field;
 use IslamDB\OrchidSetting\Models\Setting;
@@ -12,6 +13,7 @@ use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Label;
+use Orchid\Screen\Fields\Upload;
 use Orchid\Screen\Layouts\Modal;
 use Orchid\Screen\Screen;
 use Orchid\Support\Color;
@@ -45,6 +47,8 @@ class SettingListScreen extends Screen
     protected $propertiesPermission = false;
     protected $orderPermission = false;
     protected $deletePermission = false;
+    protected $backupPermission = false;
+    protected $restorePermission = false;
 
     /**
      * @var string[]
@@ -66,6 +70,8 @@ class SettingListScreen extends Screen
             $this->propertiesPermission = $user->hasAccess('setting.properties');
             $this->orderPermission = $user->hasAccess('setting.order');
             $this->deletePermission = $user->hasAccess('setting.delete');
+            $this->backupPermission = $user->hasAccess('setting.backup');
+            $this->restorePermission = $user->hasAccess('setting.restore');
 
             $this->user = $user;
 
@@ -91,6 +97,17 @@ class SettingListScreen extends Screen
     public function commandBar(): array
     {
         return [
+            Button::make('Backup')
+                ->method('backup')
+                ->rawClick()
+                ->canSee($this->backupPermission)
+                ->icon('cloud-download'),
+            ModalToggle::make('Restore')
+                ->method('restore')
+                ->modal('restore')
+                ->canSee($this->restorePermission)
+                ->modalTitle('Restore')
+                ->icon('cloud-upload'),
             DropDown::make('Create')
                 ->icon('plus')
                 ->list(
@@ -120,7 +137,7 @@ class SettingListScreen extends Screen
 
                 return $setting;
             });
-        
+
         $layouts = [
             Layout::tabs(
                 $settings->groupBy('group')
@@ -216,11 +233,86 @@ class SettingListScreen extends Screen
             )
         ];
 
+        if ($this->restorePermission) {
+            $layouts[] = Layout::modal('restore', [
+                Layout::rows([
+                    Input::make('file')
+                        ->type('file')
+                        ->accept('.json')
+                        ->required()
+                ])
+            ])->applyButton(__('Restore'));
+        }
+
         return $layouts;
     }
 
+    public function restore()
+    {
+        if (!$this->restorePermission) {
+            Alert::warning(__('You are not allowed to do this action'));
+        } else {
+            $this->validate(request(), [
+                'file' => 'required'
+            ]);
+
+            rescue(function () {
+                $data = request()->file('file')->getRealPath();
+                $data = file_get_contents($data);
+                $data = json_decode($data, true);
+
+                if (is_null($data)) {
+                    Alert::warning(__('Your file is not valid'));
+                } else {
+                    $data = collect($data)->map(function ($setting) {
+                        $setting['created_at'] = Carbon::parse($setting['created_at']);
+                        $setting['updated_at'] = Carbon::parse($setting['updated_at']);
+
+                        return $setting;
+                    });
+
+                    DB::beginTransaction();
+
+                    Setting::query()
+                        ->whereIn('key', $data->pluck('key')->toArray())
+                        ->delete();
+
+                    Setting::query()
+                        ->insert($data->toArray());
+
+                    DB::commit();
+
+                    if ($data->count() <= 1) {
+                        Alert::success($data->count().' '.__('setting was restored'));
+                    } else {
+                        Alert::success($data->count().' '.__('settings were restored'));
+                    }
+                }
+            }, function (\Throwable $e) {
+                DB::rollBack();
+
+                Alert::error(__('Failed').'<br>'.$e->getMessage());
+            });
+        }
+    }
+
     /**
-     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function backup()
+    {
+        if (!$this->backupPermission) {
+            Alert::warning(__('You are not allowed to do this action'));
+        } else {
+            return response()->streamDownload(function () {
+                echo Setting::all()
+                    ->toJson(JSON_PRETTY_PRINT);
+            }, 'setting.json');
+        }
+    }
+
+    /**
+     * Move setting
      */
     public function upDown()
     {
@@ -252,7 +344,7 @@ class SettingListScreen extends Screen
     }
 
     /**
-     *
+     * Delete setting
      */
     public function delete()
     {
