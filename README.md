@@ -1,8 +1,8 @@
-## Introduction
+# Introduction
 
-Orchid Setting
+Orchid Setting is a package that helps you to make global setting for your app
 
-## Installation
+# Installation
 
 > The manual assumes that you already have a copy of [Laravel](https://laravel.com/docs/installation) with [Orchid](https://orchid.software/en/docs/installation/)
 

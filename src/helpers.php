@@ -81,6 +81,8 @@ if (!function_exists('setting')) {
                 return $getUrlIfAttachments
                     ? $attachments->first()->url()
                     : $attachments->first();
+            } elseif (count($attachments) == 0) {
+                return $default;
             }
 
             return $getUrlIfAttachments
