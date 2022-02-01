@@ -305,7 +305,8 @@ class SettingListScreen extends Screen
             Alert::warning(__('You are not allowed to do this action'));
         } else {
             return response()->streamDownload(function () {
-                echo Setting::all()
+                echo DB::table('settings')
+                    ->get()
                     ->toJson(JSON_PRETTY_PRINT);
             }, 'setting.json');
         }
