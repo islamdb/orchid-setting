@@ -16,7 +16,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "orchid/platform": "^10.0",
+        "orchid/platform": "^10.0|^11.0|^12.0",
         "islamdb/orchid-helper": "dev-master"
     },
     "extra": {
